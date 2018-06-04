@@ -333,7 +333,7 @@ GameObject:
   - component: {fileID: 1942679540}
   - component: {fileID: 1942679541}
   m_Layer: 0
-  m_Name: Cochenec_rendu_anim0000
+  m_Name: image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
