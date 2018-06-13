@@ -103,7 +103,3 @@ public class ClickMouse : MonoBehaviour
         v3Pos = Input.mousePosition;
      }
 }
-
-
-
-
