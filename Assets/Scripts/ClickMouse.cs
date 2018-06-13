@@ -3,13 +3,13 @@ using System.Collections;
 
 public class ClickMouse : MonoBehaviour
 {
-    private float   mousePosX;
-    private float   currentMousePosX;
-    private float   tmpMousePosX;
+
     private bool    modeOn;
     private int     currentPosition;
     private int     CntZeros;
     private string  strZeros;
+    private Vector3 v3Pos;
+    private int     threshold = 9;
 
     private void Awake()
     {
@@ -17,47 +17,31 @@ public class ClickMouse : MonoBehaviour
         currentPosition = 0;
         CntZeros = 3;
         strZeros = "000";
-        tmpMousePosX = 0;
     }
 
     public void Update()
     {
         if (Input.GetButtonDown("Fire1"))
         {
-            mousePosX = Input.mousePosition.x;
-            currentMousePosX = mousePosX;
-            tmpMousePosX = Input.mousePosition.x;
             modeOn = true;
         }
         if (modeOn)
         {
-            currentMousePosX = Input.mousePosition.x;
-            tmpMousePosX = Input.mousePosition.x;
-            if (!Mathf.Approximately(currentMousePosX, mousePosX))
+            OnMouseDrag();
+            if (currentPosition == 101)
             {
-               if ((currentMousePosX - mousePosX) > 10)
-                {
-                    Debug.Log("Shit" + tmpMousePosX);
-                    LeftOrRight();
-                 /*   if (currentPosition == 101)
-                    {
-                        currentPosition = 0; 
-                    }
-                    else if (currentPosition == 0)
-                    {
-                        currentPosition = 100; 
-                    } */
-                    ImageRefresh();
-                }
-                tmpMousePosX = Input.mousePosition.x;
+                currentPosition = 0; 
             }
+            else if (currentPosition == 0)
+            {
+                currentPosition = 100; 
+            }
+            ImageRefresh();
         }
-            if (Input.GetButtonUp("Fire1"))
-            {
-                mousePosX = Input.mousePosition.x;
-                modeOn = false;
-                //Garder la derniere image
-            }
+        if (Input.GetButtonUp("Fire1"))
+        {
+            modeOn = false;
+        }
     }
     void    RefreshZeros(int currentPosition)
     {
@@ -86,26 +70,38 @@ public class ClickMouse : MonoBehaviour
                         strZeros = "0";
                     else if (CntZeros == 0)
                         strZeros = "";
-                    mousePosX = Input.mousePosition.x;
-                    currentMousePosX = mousePosX;
-                    Debug.Log("Images/Cochenec_rendu_anim" + strZeros + currentPosition.ToString() + ".png");
                     GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Images/Cochenec_rendu_anim" + strZeros + currentPosition.ToString());
     }
 
-    void    LeftOrRight()
-    {
-        Debug.Log("Turlute" + tmpMousePosX);
-        Debug.Log("Turlute2" + Input.mousePosition.x);
-        if (Mathf.Approximately(tmpMousePosX < Input.mousePosition.x) + 100)
+        void OnMouseDrag() 
         {
-            currentPosition++;
+        var v3 = Input.mousePosition - v3Pos;
+        v3.Normalize();
+        var f = Vector3.Dot(v3, Vector3.up);
+        if (Vector3.Distance(v3Pos, Input.mousePosition) < threshold) {
+             Debug.Log("No movement");
+        return;
         }
-        else if (Mathf.Approximately(tmpMousePosX > Input.mousePosition.x) - 100)
-        {
-            currentPosition--;
+ 
+        if (f >= 0.5) {
+            Debug.Log("Up");
         }
-    }
-
+        else if (f <= -0.5) {
+            Debug.Log("Down");
+        }
+        else {
+            f = Vector3.Dot(v3, Vector3.right);
+            if (f >= 0.5) {
+                Debug.Log("Right");
+                currentPosition--;
+            }
+            else {
+                 Debug.Log("Left");
+                 currentPosition++;
+                }
+            }
+        v3Pos = Input.mousePosition;
+     }
 }
 
 
