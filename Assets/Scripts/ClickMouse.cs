@@ -18,6 +18,12 @@ public class ClickMouse : MonoBehaviour
         currentPosition = 0;
         CntZeros = 3;
         strZeros = "000";
+        Screen.orientation = ScreenOrientation.LandscapeRight;
+        Screen.autorotateToPortrait = false;
+        Screen.autorotateToPortraitUpsideDown = false;
+        Screen.autorotateToLandscapeLeft = true;
+        Screen.autorotateToLandscapeRight = true;
+        Screen.orientation = ScreenOrientation.AutoRotation;
     }
 
     public void Update()
